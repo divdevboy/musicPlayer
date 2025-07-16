@@ -3,6 +3,7 @@ import {Box} from '@mui/material';
 import Sidebar from "../sidebar/Sidebar.jsx";
 import Hero from "./Hero.jsx";
 import MusicRowPlaceHolder from "./MusicRowPlaceHolder.jsx";
+import MiniPlayer from "./MiniPlayer.jsx";
 
 // Color palette from Figma
 const colors = {
@@ -36,9 +37,10 @@ const Home = () => {
 
                     New Release Songs
                     <MusicRowPlaceHolder colors={colors} box_shadow={colors.blue} title={"New Release Songs"}/>
-
+                    <MiniPlayer/>
                 </Box>
             </Box>
+            <MiniPlayer/>
         </Box>
     );
 };

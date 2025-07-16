@@ -11,6 +11,8 @@ export default function MusicRowPlaceHolder ({colors,box_shadow,title}){
         { title: 'Superman', artist: 'Eminem', img: 'https://i1.sndcdn.com/artworks-EG2zqGrtkVD03ZQ9-nNwZ6A-t500x500.jpg' },
         { title: 'Softcore', artist: 'The Neighborhood', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSns4cejxsvf4FKd83MgjBYRIxzoC0MrOl3FA&s' },
         { title: 'The Loneliest', artist: 'Måneskin', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhOdknZooVNucBEQhOLoRYZtwTYd4HaZW82g&s' },
+        { title: 'The Loneliest', artist: 'Måneskin', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhOdknZooVNucBEQhOLoRYZtwTYd4HaZW82g&s' },
+        { title: 'The Loneliest', artist: 'Måneskin', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhOdknZooVNucBEQhOLoRYZtwTYd4HaZW82g&s' },
     ];
 let titleArr = title.split(" ")
 
