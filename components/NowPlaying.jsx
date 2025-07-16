@@ -14,7 +14,7 @@ import {
     Repeat,
     SkipNext,
     SkipPrevious,
-    ArrowBack
+    ArrowBack, Shuffle
 } from "@mui/icons-material";
 
 const colors = {
@@ -268,9 +268,7 @@ export default function NowPlaying() {
                                     mb: 1,
                                     fontWeight: idx === currentSongIndex ? 700 : 400,
                                     cursor: 'pointer',
-                                    transition: 'background 0.2s',
-                                    // onClick: () => setCurrentSongIndex(idx) // Uncomment to enable song switching
-                                }}>
+                                    transition: 'background 0.2s'}} onClick={()=>{setCurrentSongIndex(idx)}}>
                                     <Typography variant="body1" sx={{ fontWeight: 'inherit' }}>
                                         {idx + 1}. {song.title.split(' - ')[0]}
                                     </Typography>
@@ -332,12 +330,12 @@ export default function NowPlaying() {
                 />
                 {/* Controls */}
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2, mt: 1 }}>
-                    <IconButton /* onClick={prevSong} */ sx={{ color: colors.white }}>
+                    <IconButton  onClick={prevSong}  sx={{ color: colors.white }}>
                         <SkipPrevious />
                     </IconButton>
                     <IconButton
                         color={btnColour}
-                        /* onClick={practiceClicked} */
+                         onClick={practiceClicked}
                         sx={{
                             mx: 1,
                             background: isPlaying ? colors.pink : colors.cardBg,
@@ -355,12 +353,16 @@ export default function NowPlaying() {
                     >
                         {isPlaying ? <Pause sx={{ fontSize: 36 }} /> : <PlayArrow sx={{ fontSize: 36 }} />}
                     </IconButton>
-                    <IconButton /* onClick={nextSong} */ sx={{ color: colors.white }}>
+                    <IconButton  onClick={nextSong} sx={{ color: colors.white }}>
                         <SkipNext />
                     </IconButton>
-                    <IconButton /* onClick={() => setIsRepeat(!isRepeat)} */ sx={{ color: isRepeat ? colors.pink : colors.gray }}>
+                    <IconButton  onClick={() => setIsRepeat(!isRepeat)}  sx={{ color: isRepeat ? colors.pink : colors.gray }}>
                         <Repeat />
                     </IconButton>
+                    <IconButton onClick={() => setIsShuffle(!isShuffle)} sx={{ color: isShuffle ? colors.pink : colors.gray }}>
+                        <Shuffle />
+                    </IconButton>
+
                 </Box>
             </Box>
             {/* Audio element (hidden) */}
