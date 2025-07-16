@@ -32,6 +32,7 @@ export default function NowPlaying() {
     let [btnColour, changeBtnColour] = useState("primary")
     let [isPlaying, setIsPlaying] = useState(false)
     let [progress, setProgress] = useState(0)
+    const [durations, setDurations] = useState({});
     const [currentSongIndex, setCurrentSongIndex] = useState(0);
     const playlist = [
         {
@@ -59,6 +60,18 @@ export default function NowPlaying() {
             art: "https://upsong.ir/wp-content/uploads/2023/04/mohsen_chavoshi_az_on_jonon_che_khabar.jpg"
         }
     ];
+    useEffect(() => {
+        playlist.forEach((song, idx) => {
+            const tempAudio = new Audio(song.url);
+            tempAudio.addEventListener("loadedmetadata", () => {
+                setDurations(prev => ({
+                    ...prev,
+                    [idx]: tempAudio.duration
+                }));
+            });
+        });
+    }, []);
+
     const [isRepeat, setIsRepeat] = useState(false);
     const [isShuffle, setIsShuffle] = useState(false);
     const audioRef = useRef(null);
@@ -273,8 +286,9 @@ export default function NowPlaying() {
                                         {idx + 1}. {song.title.split(' - ')[0]}
                                     </Typography>
                                     <Typography variant="body2" sx={{ fontWeight: 'inherit' }}>
-                                        {formatTime(duration)}
+                                        {durations[idx] ? formatTime(durations[idx]) : "--:--"}
                                     </Typography>
+
                                 </Box>
                             ))}
                         </Box>
