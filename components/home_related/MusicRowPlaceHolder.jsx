@@ -1,7 +1,7 @@
 import {Box, Button,  Typography} from "@mui/material";
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import React from "react";
-import MusicRow from "./MusicRow";
+import MusicRow from "./MusicRow.jsx";
 
 export default function MusicRowPlaceHolder ({colors,box_shadow,title}){
 
@@ -9,8 +9,8 @@ export default function MusicRowPlaceHolder ({colors,box_shadow,title}){
         { title: 'Whatever It Takes', artist: 'Imagine Dragons', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmP6JnV6bB19DyIDpxmqjqhuHywIOu_bxkiw&s' },
         { title: 'Skyfall', artist: 'Adele', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREoJapC949FkQ_ekY5cKTBjALF19O-muwH6Q&s' },
         { title: 'Superman', artist: 'Eminem', img: 'https://i1.sndcdn.com/artworks-EG2zqGrtkVD03ZQ9-nNwZ6A-t500x500.jpg' },
-        { title: 'Softcore', artist: 'The Neighborhood', img: 'https://via.placeholder.com/120x120?text=Album' },
-        { title: 'The Loneliest', artist: 'Måneskin', img: 'https://via.placeholder.com/120x120?text=Album' },
+        { title: 'Softcore', artist: 'The Neighborhood', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSns4cejxsvf4FKd83MgjBYRIxzoC0MrOl3FA&s' },
+        { title: 'The Loneliest', artist: 'Måneskin', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhOdknZooVNucBEQhOLoRYZtwTYd4HaZW82g&s' },
     ];
 let titleArr = title.split(" ")
 
@@ -45,7 +45,7 @@ let titleArr = title.split(" ")
 
             <Box sx={{ display: 'flex', gap: 3, overflowX: 'auto', pb: 1 }}>
                 {weeklySongs.map((song, idx) => (
-                    <MusicRow song={song} colors={colors} box_shadow={box_shadow}/>
+                    <MusicRow key={song.title} song={song} colors={colors} box_shadow={box_shadow}/>
                 ))}
             </Box>
         </Box>

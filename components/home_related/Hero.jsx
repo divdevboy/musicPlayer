@@ -1,13 +1,12 @@
 import {Box} from "@mui/material";
-import heroImg from "../src/assets/hero.png";
+import heroImg from "../../src/assets/hero.png";
 import React from "react";
-import Header from "./Header.jsx";
-import HeroContent from "./HeroContent";
+import Header from "../Header.jsx";
+import HeroContent from "./HeroContent.jsx";
 
 export default function Hero({colors}){
     return(
         <div>
-            Hero Section
             <Box
                 sx={{
                     display: 'flex',

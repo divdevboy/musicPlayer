@@ -22,7 +22,6 @@ export default function NavItem({section,colors,index}){
             <List sx={{ width: '100%' }}>
                 {section.items.map((item) => (
                     <ListItem
-                        button
                         key={item.label}
                         sx={{
                             mb: 1,

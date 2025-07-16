@@ -1,6 +1,6 @@
 import React from 'react';
 import {Box} from '@mui/material';
-import Sidebar from "./sidebar/Sidebar.jsx";
+import Sidebar from "../sidebar/Sidebar.jsx";
 import Hero from "./Hero.jsx";
 import MusicRowPlaceHolder from "./MusicRowPlaceHolder.jsx";
 

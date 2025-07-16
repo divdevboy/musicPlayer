@@ -63,7 +63,7 @@ const Sidebar = ({colors}) => {
                     </Typography>
                 </Box>
                 {sidebarSections.map((section, i) => (
-                    <NavItem colors={colors} section={section} index={i}/>
+                    <NavItem key={section.title} colors={colors} section={section} index={i}/>
                 ))}
             </Box>
             <Box>
@@ -71,7 +71,6 @@ const Sidebar = ({colors}) => {
                 <List sx={{ width: '100%' }}>
                     {bottomNav.map((item) => (
                         <ListItem
-                            button
                             key={item.label}
                             sx={{
                                 borderRadius: 2,

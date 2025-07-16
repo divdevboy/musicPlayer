@@ -5,9 +5,7 @@ import React from "react";
 export default function Header({colors}){
     return(
         <div>
-            Header Row (moved from AppBar)
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', mb: 0, mt: 0 }}>
-                Search Bar
                 <Box
                     sx={{
                         background: '#23232a',
@@ -29,13 +27,11 @@ export default function Header({colors}){
                         disabled
                     />
                 </Box>
-                Nav Links
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, ml: 6 }}>
                     <Button sx={{ color: colors.white, fontWeight: 500 }}>About Us</Button>
                     <Button sx={{ color: colors.white, fontWeight: 500 }}>Contact</Button>
                     <Button sx={{ color: colors.white, fontWeight: 500 }}>Premium</Button>
                 </Box>
-                Auth Buttons
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, ml: 6 }}>
                     <Button
                         variant="outlined"
