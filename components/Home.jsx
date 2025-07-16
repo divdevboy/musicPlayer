@@ -1,8 +1,8 @@
 import React from 'react';
 import {Box} from '@mui/material';
-import Sidebar from "../components/sidebar/Sidebar";
-import Hero from "../components/Hero";
-import MusicRowPlaceHolder from "../components/MusicRowPlaceHolder";
+import Sidebar from "./sidebar/Sidebar.jsx";
+import Hero from "./Hero.jsx";
+import MusicRowPlaceHolder from "./MusicRowPlaceHolder.jsx";
 
 // Color palette from Figma
 const colors = {

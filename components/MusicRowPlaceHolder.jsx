@@ -1,4 +1,4 @@
-import {Box, Button, Card, CardContent, CardMedia, Typography} from "@mui/material";
+import {Box, Button,  Typography} from "@mui/material";
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import React from "react";
 import MusicRow from "./MusicRow";
