@@ -27,8 +27,7 @@ const Home = () => {
             <Sidebar colors={colors}/>
             {/* Main Content */}
             <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', minHeight: '100vh'}}>
-                Header
-                Main Sections
+
                 <Box sx={{flex: 1, p: 4, background: colors.bg}}>
                     <Hero colors={colors}/>
 
