@@ -33,7 +33,7 @@ const playlist = [
     }
 ];
 
-export default function MiniPlayer() {
+export default function MiniPlayer({onclick}) {
     const [currentSongIndex, setCurrentSongIndex] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
     const audioRef = useRef(null);
@@ -99,7 +99,7 @@ export default function MiniPlayer() {
             right: 32,
             zIndex: 2000,
             boxShadow: '0 4px 32px 0 #181818',
-        }}>
+        }} onClick={onclick}>
             <Card sx={{
                 width: 320,
                 height: 120,

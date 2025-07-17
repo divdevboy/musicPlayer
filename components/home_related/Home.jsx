@@ -4,7 +4,7 @@ import Sidebar from "../sidebar/Sidebar.jsx";
 import Hero from "./Hero.jsx";
 import MusicRowPlaceHolder from "./MusicRowPlaceHolder.jsx";
 import MiniPlayer from "./MiniPlayer.jsx";
-import {useDispatch, useSelector} from "react-redux";
+import { useNavigate } from 'react-router-dom';
 
 // Color palette from Figma
 const colors = {
@@ -24,6 +24,7 @@ const colors = {
 
 
 const Home = () => {
+    const navigate = useNavigate();
 
     return (
         <Box sx={{display: 'flex', minHeight: '100vh', background: colors.bg}}>
@@ -40,10 +41,10 @@ const Home = () => {
 
                     New Release Songs
                     <MusicRowPlaceHolder colors={colors} box_shadow={colors.blue} title={"New Release Songs"}/>
-                    <MiniPlayer/>
+                    <MiniPlayer onclick={() => navigate('/now-playing')}/>
                 </Box>
             </Box>
-            <MiniPlayer/>
+
         </Box>
     );
 };

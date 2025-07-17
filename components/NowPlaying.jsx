@@ -18,6 +18,7 @@ import {
 } from "@mui/icons-material";
 import {useDispatch, useSelector} from "react-redux";
 import {togglePlay, toggleRepeat, toggleShuffle} from "./redux/PlayerSlice.js";
+import {useNavigate} from "react-router-dom";
 
 const colors = {
     bg: '#23232a',
@@ -33,8 +34,9 @@ export default function NowPlaying() {
     const isPlaying = useSelector(state => state.player.isPlaying)
     const isRepeat = useSelector(state => state.player.isRepeat)
     const isShuffle = useSelector(state => state.player.isShuffle)
-
     const dispatch = useDispatch()
+    const navigate = useNavigate();
+
     // --- State and logic (unchanged) ---
     let [btnColour, changeBtnColour] = useState("primary")
     let [progress, setProgress] = useState(0)
@@ -188,7 +190,7 @@ export default function NowPlaying() {
                         height: 64,
                     }}
                     // TODO: Add your navigation logic here, e.g., go back to previous page
-                    // onClick={() => { /* your navigation logic */ }}
+                     onClick={() => { navigate('/') }}
                 >
                     <ArrowBack sx={{ fontSize: 36 }} />
                 </IconButton>
