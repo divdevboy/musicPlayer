@@ -16,6 +16,8 @@ import {
     SkipPrevious,
     ArrowBack, Shuffle
 } from "@mui/icons-material";
+import {useDispatch, useSelector} from "react-redux";
+import {togglePlay, toggleRepeat, toggleShuffle} from "./redux/PlayerSlice.js";
 
 const colors = {
     bg: '#23232a',
@@ -28,9 +30,13 @@ const colors = {
 
 
 export default function NowPlaying() {
+    const isPlaying = useSelector(state => state.player.isPlaying)
+    const isRepeat = useSelector(state => state.player.isRepeat)
+    const isShuffle = useSelector(state => state.player.isShuffle)
+
+    const dispatch = useDispatch()
     // --- State and logic (unchanged) ---
     let [btnColour, changeBtnColour] = useState("primary")
-    let [isPlaying, setIsPlaying] = useState(false)
     let [progress, setProgress] = useState(0)
     const [durations, setDurations] = useState({});
     const [currentSongIndex, setCurrentSongIndex] = useState(0);
@@ -72,8 +78,6 @@ export default function NowPlaying() {
         });
     }, []);
 
-    const [isRepeat, setIsRepeat] = useState(false);
-    const [isShuffle, setIsShuffle] = useState(false);
     const audioRef = useRef(null);
     const url = playlist[currentSongIndex].url;
     const [duration, setDuration] = useState(0);
@@ -133,10 +137,10 @@ export default function NowPlaying() {
     }, [currentSongIndex]);
 
     function practiceClicked() {
-        const nextState = !isPlaying;
+
         changeBtnColour(btnColour === "primary" ? "secondary" : "primary");
-        setIsPlaying(nextState);
-        if (nextState) {
+        dispatch(togglePlay())
+        if (!isPlaying) {
             audioRef.current.play();
         } else {
             audioRef.current.pause();
@@ -370,10 +374,10 @@ export default function NowPlaying() {
                     <IconButton  onClick={nextSong} sx={{ color: colors.white }}>
                         <SkipNext />
                     </IconButton>
-                    <IconButton  onClick={() => setIsRepeat(!isRepeat)}  sx={{ color: isRepeat ? colors.pink : colors.gray }}>
+                    <IconButton  onClick={() => dispatch(toggleRepeat())}  sx={{ color: isRepeat ? colors.pink : colors.gray }}>
                         <Repeat />
                     </IconButton>
-                    <IconButton onClick={() => setIsShuffle(!isShuffle)} sx={{ color: isShuffle ? colors.pink : colors.gray }}>
+                    <IconButton onClick={() => dispatch(toggleShuffle()) } sx={{ color: isShuffle ? colors.pink : colors.gray }}>
                         <Shuffle />
                     </IconButton>
 

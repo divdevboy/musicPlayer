@@ -47,7 +47,7 @@ let titleArr = title.split(" ")
 
             <Box sx={{ display: 'flex', gap: 3, overflowX: 'auto', pb: 1 }}>
                 {weeklySongs.map((song, idx) => (
-                    <MusicRow key={song.title} song={song} colors={colors} box_shadow={box_shadow}/>
+                    <MusicRow key={idx} song={song} colors={colors} box_shadow={box_shadow}/>
                 ))}
             </Box>
         </Box>

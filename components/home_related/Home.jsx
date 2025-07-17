@@ -4,6 +4,7 @@ import Sidebar from "../sidebar/Sidebar.jsx";
 import Hero from "./Hero.jsx";
 import MusicRowPlaceHolder from "./MusicRowPlaceHolder.jsx";
 import MiniPlayer from "./MiniPlayer.jsx";
+import {useDispatch, useSelector} from "react-redux";
 
 // Color palette from Figma
 const colors = {
@@ -21,7 +22,9 @@ const colors = {
 };
 
 
+
 const Home = () => {
+
     return (
         <Box sx={{display: 'flex', minHeight: '100vh', background: colors.bg}}>
 
