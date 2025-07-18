@@ -26,6 +26,8 @@ const colors = {
 const Home = () => {
     const navigate = useNavigate();
 
+
+
     return (
         <Box sx={{display: 'flex', minHeight: '100vh', background: colors.bg}}>
 

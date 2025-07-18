@@ -3,7 +3,7 @@ import {Box, IconButton, Typography, Card, CardMedia} from "@mui/material";
 import {PlayArrow, Pause, SkipNext, SkipPrevious} from "@mui/icons-material";
 import Slider from "@mui/material/Slider";
 import {useDispatch, useSelector} from "react-redux";
-import {play, setCurrentTime, togglePlay} from "../redux/PlayerSlice.js";
+import { setCurrentSongIndex, setCurrentTime, togglePlay} from "../redux/PlayerSlice.js";
 
 const colors = {
     bg: '#181818',
@@ -36,7 +36,7 @@ const playlist = [
 ];
 
 export default function MiniPlayer({onclick}) {
-    const [currentSongIndex, setCurrentSongIndex] = useState(1);
+    const currentSongIndex = useSelector(state => state.player.currentSongIndex);
     const dispatch = useDispatch();
     const isPlaying = useSelector(state => state.player.isPlaying);
     const audioRef = useRef(null);
@@ -68,7 +68,9 @@ export default function MiniPlayer({onclick}) {
         if (!audio) return;
         const updateProgress = () => dispatch(setCurrentTime(audio.currentTime));
         const setAudioDuration = () => setDuration(audio.duration);
-        const handleEnded = () => { handleNext(); };
+        const handleEnded = () => {
+            handleNext();
+        };
         audio.addEventListener("timeupdate", updateProgress);
         audio.addEventListener("loadedmetadata", setAudioDuration);
         audio.addEventListener("ended", handleEnded);
@@ -91,12 +93,14 @@ export default function MiniPlayer({onclick}) {
     }
 
     function handleNext() {
-        setCurrentSongIndex((prev) => (prev + 1) % playlist.length);
+        const nextIndex = (currentSongIndex + 1) % playlist.length;
+        dispatch(setCurrentSongIndex(nextIndex))
         dispatch(setCurrentTime(0));
     }
 
     function handlePrev() {
-        setCurrentSongIndex((prev) => (prev - 1 + playlist.length) % playlist.length);
+        const prevIndex = (currentSongIndex - 1 + playlist.length) % playlist.length;
+        dispatch(setCurrentSongIndex(prevIndex))
         dispatch(setCurrentTime(0));
     }
 
@@ -180,7 +184,7 @@ export default function MiniPlayer({onclick}) {
                     }}
                 />
                 {/* Controls */}
-                <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 0}} >
+                <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 0}}>
                     <IconButton onClick={handlePrev} sx={{color: colors.white}}>
                         <SkipPrevious/>
                     </IconButton>

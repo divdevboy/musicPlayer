@@ -17,7 +17,7 @@ import {
     ArrowBack, Shuffle
 } from "@mui/icons-material";
 import {useDispatch, useSelector} from "react-redux";
-import {setCurrentTime, togglePlay, toggleRepeat, toggleShuffle} from "./redux/PlayerSlice.js";
+import {setCurrentSongIndex, setCurrentTime, togglePlay, toggleRepeat, toggleShuffle} from "./redux/PlayerSlice.js";
 import {useNavigate} from "react-router-dom";
 
 const colors = {
@@ -29,45 +29,19 @@ const colors = {
     gray: '#BEB8D8',
 };
 
-
 export default function NowPlaying() {
     const isPlaying = useSelector(state => state.player.isPlaying)
     const isRepeat = useSelector(state => state.player.isRepeat)
     const isShuffle = useSelector(state => state.player.isShuffle)
+    const progress = useSelector(state => state.player.progress)
+    const currentSongIndex = useSelector(state => state.player.currentSongIndex);
+    const playlist = useSelector(state => state.player.songList);
     const dispatch = useDispatch()
     const navigate = useNavigate();
-
-    // --- State and logic (unchanged) ---
+    // --- unchanged State  ---
     let [btnColour, changeBtnColour] = useState("primary")
-    const progress = useSelector(state => state.player.progress)
     const [durations, setDurations] = useState({});
-    const [currentSongIndex, setCurrentSongIndex] = useState(1);
-    const playlist = [
-        {
-            title: "The Monster - Eminem ft. Rihanna",
-            artist: "Eminem ft. Rihanna",
-            album: "The Marshall Mathers LP 2",
-            year: "2013",
-            url: "https://dl.musicdel.ir/Music/1400/08/eminem_monster%20128.mp3",
-            art: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSns4cejxsvf4FKd83MgjBYRIxzoC0MrOl3FA&s"
-        },
-        {
-            title: "A million years ago - adele",
-            artist: "Adele",
-            album: "25",
-            year: "2015",
-            url: "https://ts4.tarafdari.com/contents/user6984/content-sound/09_million_years_ago.mp3",
-            art: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhOdknZooVNucBEQhOLoRYZtwTYd4HaZW82g&s"
-        },
-        {
-            title: "Rahayam kon - Mohsen Chavoshi",
-            artist: "Mohsen Chavoshi",
-            album: "Single",
-            year: "2023",
-            url: "https://dls.musics-fa.com/tagdl/1402/Mohsen%20Chavoshi%20-%20Rahayam%20Kon%20(320).mp3",
-            art: "https://upsong.ir/wp-content/uploads/2023/04/mohsen_chavoshi_az_on_jonon_che_khabar.jpg"
-        }
-    ];
+
     useEffect(() => {
         playlist.forEach((song, idx) => {
             const tempAudio = new Audio(song.url);
@@ -81,18 +55,19 @@ export default function NowPlaying() {
     }, []);
 
     const audioRef = useRef(null);
-    const url = playlist[currentSongIndex].url;
+    console.log(currentSongIndex)
+    const url = playlist[currentSongIndex]?.url || "";
     const [duration, setDuration] = useState(0);
 
     function nextSong() {
         const nextIndex = (currentSongIndex + 1) % playlist.length;
-        setCurrentSongIndex(nextIndex);
+        dispatch(setCurrentSongIndex(nextIndex))
         dispatch(setCurrentTime(0))
     }
 
     function prevSong() {
         const prevIndex = (currentSongIndex - 1 + playlist.length) % playlist.length;
-        setCurrentSongIndex(prevIndex);
+        dispatch(setCurrentSongIndex(prevIndex))
         dispatch(setCurrentTime(0))
     }
 
@@ -116,7 +91,7 @@ export default function NowPlaying() {
                 do {
                     randomIndex = Math.floor(Math.random() * playlist.length);
                 } while (randomIndex === currentSongIndex);
-                setCurrentSongIndex(randomIndex);
+                dispatch(setCurrentSongIndex(randomIndex))
             } else {
                 nextSong();
             }
@@ -292,7 +267,7 @@ export default function NowPlaying() {
                                     cursor: 'pointer',
                                     transition: 'background 0.2s'
                                 }} onClick={() => {
-                                    setCurrentSongIndex(idx);
+                                    dispatch(setCurrentSongIndex(idx))
                                     dispatch(setCurrentTime(0));
                                 }}>
                                     <Typography variant="body1" sx={{fontWeight: 'inherit'}}>
