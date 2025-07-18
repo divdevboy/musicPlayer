@@ -21,7 +21,7 @@ export default function MusicRow({song,colors,box_shadow}){
             <CardMedia
                 component="img"
                 height="120"
-                image={song.img}
+                image={song.art}
                 alt={song.title}
                 sx={{ borderRadius: 3 }}
             />

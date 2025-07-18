@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Box} from '@mui/material';
 import Sidebar from "../sidebar/Sidebar.jsx";
 import Hero from "./Hero.jsx";
 import MusicRowPlaceHolder from "./MusicRowPlaceHolder.jsx";
 import MiniPlayer from "./MiniPlayer.jsx";
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
+import {useState} from "react";
 
 // Color palette from Figma
 const colors = {
@@ -22,11 +23,16 @@ const colors = {
 };
 
 
-
 const Home = () => {
     const navigate = useNavigate();
+    const [musicData, setMusicData] = useState(null);
 
-
+    useEffect(() => {
+        fetch("https://utotech.ir/songs.php")
+            .then(r => r.json())
+            .then((data) => setMusicData(data))
+            .catch((err) => console.error(err));
+    }, []);
 
     return (
         <Box sx={{display: 'flex', minHeight: '100vh', background: colors.bg}}>
@@ -37,12 +43,12 @@ const Home = () => {
 
                 <Box sx={{flex: 1, p: 4, background: colors.bg}}>
                     <Hero colors={colors}/>
+                    {
+                        musicData?.map(it =>(
+                            <MusicRowPlaceHolder colors={colors} box_shadow={colors.pink} title={it.list_title} key={it.list_title} list={it.tracks}/>
+                        ))
+                    }
 
-                    Weekly Top Songs
-                    <MusicRowPlaceHolder colors={colors} box_shadow={colors.pink} title={"Weekly Top Songs"}/>
-
-                    New Release Songs
-                    <MusicRowPlaceHolder colors={colors} box_shadow={colors.blue} title={"New Release Songs"}/>
                     <MiniPlayer onclick={() => navigate('/now-playing')}/>
                 </Box>
             </Box>
