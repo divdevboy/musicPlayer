@@ -231,7 +231,7 @@ export default function NowPlaying() {
                         fontSize: isMobile ? 40 : 72,
                         textAlign: isMobile ? 'center' : 'left',
                     }}>
-                        MEDUZA
+                        Utotech
                     </Typography>
                     <Typography variant="h4" sx={{color: colors.white, fontWeight: 700, mb: 1, mt: -6}}>
                         {currentSong.title.split(' - ')[0]}

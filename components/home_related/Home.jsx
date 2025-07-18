@@ -44,8 +44,8 @@ const Home = () => {
                 <Box sx={{flex: 1, p: 4, background: colors.bg}}>
                     <Hero colors={colors}/>
                     {
-                        musicData?.map(it =>(
-                            <MusicRowPlaceHolder colors={colors} box_shadow={colors.pink} title={it.list_title} key={it.list_title} list={it.tracks}/>
+                        musicData?.map((it,idx) =>(
+                            <MusicRowPlaceHolder colors={colors} box_shadow={colors.pink} title={it.list_title} key={idx} list={it.tracks}/>
                         ))
                     }
 

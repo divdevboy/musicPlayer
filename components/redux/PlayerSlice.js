@@ -54,5 +54,5 @@ const PlayerSlice = createSlice({
     }
 });
 
-export const {togglePlay,toggleRepeat,toggleShuffle,play,setCurrentTime,setCurrentSongIndex} = PlayerSlice.actions;
+export const {togglePlay,toggleRepeat,toggleShuffle,play,setCurrentTime,setCurrentSongIndex,setSongList} = PlayerSlice.actions;
 export default PlayerSlice.reducer;
