@@ -14,26 +14,6 @@ const colors = {
     cardBg: '#23232a',
 };
 
-const playlist = [
-    {
-        title: "The Monster",
-        artist: "Eminem ft. Rihanna",
-        url: "https://dl.musicdel.ir/Music/1400/08/eminem_monster%20128.mp3",
-        art: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSns4cejxsvf4FKd83MgjBYRIxzoC0MrOl3FA&s"
-    },
-    {
-        title: "A million years ago",
-        artist: "Adele",
-        url: "https://ts4.tarafdari.com/contents/user6984/content-sound/09_million_years_ago.mp3",
-        art: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhOdknZooVNucBEQhOLoRYZtwTYd4HaZW82g&s"
-    },
-    {
-        title: "Rahayam kon",
-        artist: "Mohsen Chavoshi",
-        url: "https://dls.musics-fa.com/tagdl/1402/Mohsen%20Chavoshi%20-%20Rahayam%20Kon%20(320).mp3",
-        art: "https://upsong.ir/wp-content/uploads/2023/04/mohsen_chavoshi_az_on_jonon_che_khabar.jpg"
-    }
-];
 
 export default function MiniPlayer({onclick}) {
     const currentSongIndex = useSelector(state => state.player.currentSongIndex);
@@ -41,13 +21,10 @@ export default function MiniPlayer({onclick}) {
     const isPlaying = useSelector(state => state.player.isPlaying);
     const audioRef = useRef(null);
     const progress = useSelector(state => state.player.progress)
-
-    //   const [progress, setProgress] = useState(0);
+    const playlist = useSelector(state => state.player.songList);
     const [duration, setDuration] = useState(0);
-
     const currentSong = playlist[currentSongIndex];
 
-    // Restore progress from Redux only on initial mount
     useEffect(() => {
         if (!audioRef.current) return;
         audioRef.current.currentTime = progress;
