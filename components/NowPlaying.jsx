@@ -17,7 +17,7 @@ import {
     ArrowBack, Shuffle
 } from "@mui/icons-material";
 import {useDispatch, useSelector} from "react-redux";
-import {togglePlay, toggleRepeat, toggleShuffle} from "./redux/PlayerSlice.js";
+import {setCurrentTime, togglePlay, toggleRepeat, toggleShuffle} from "./redux/PlayerSlice.js";
 import {useNavigate} from "react-router-dom";
 
 const colors = {
@@ -39,9 +39,9 @@ export default function NowPlaying() {
 
     // --- State and logic (unchanged) ---
     let [btnColour, changeBtnColour] = useState("primary")
-    let [progress, setProgress] = useState(0)
+    const progress = useSelector(state => state.player.progress)
     const [durations, setDurations] = useState({});
-    const [currentSongIndex, setCurrentSongIndex] = useState(0);
+    const [currentSongIndex, setCurrentSongIndex] = useState(1);
     const playlist = [
         {
             title: "The Monster - Eminem ft. Rihanna",
@@ -87,13 +87,13 @@ export default function NowPlaying() {
     function nextSong() {
         const nextIndex = (currentSongIndex + 1) % playlist.length;
         setCurrentSongIndex(nextIndex);
-        setProgress(0);
+        dispatch(setCurrentTime(0))
     }
 
     function prevSong() {
         const prevIndex = (currentSongIndex - 1 + playlist.length) % playlist.length;
         setCurrentSongIndex(prevIndex);
-        setProgress(0);
+        dispatch(setCurrentTime(0))
     }
 
     useEffect(() => {
@@ -104,7 +104,7 @@ export default function NowPlaying() {
         }
 
         function updateProgress() {
-            setProgress(audio.currentTime);
+            dispatch(setCurrentTime(audio.currentTime))
         }
 
         function handleEnded() {
@@ -131,11 +131,13 @@ export default function NowPlaying() {
     }, [isRepeat, isShuffle, currentSongIndex, playlist.length]);
     useEffect(() => {
         if (!audioRef.current) return;
+        audioRef.current.currentTime = progress;
         audioRef.current.load();
         if (isPlaying) {
             audioRef.current.play();
+        } else {
+            audioRef.current.pause();
         }
-        setProgress(0);
     }, [currentSongIndex]);
 
     function practiceClicked() {
@@ -185,14 +187,15 @@ export default function NowPlaying() {
                         background: colors.cardBg,
                         color: colors.pink,
                         boxShadow: '0 2px 8px 0 #181818',
-                        '&:hover': { background: colors.pink, color: colors.white },
+                        '&:hover': {background: colors.pink, color: colors.white},
                         width: 64,
                         height: 64,
                     }}
-                    // TODO: Add your navigation logic here, e.g., go back to previous page
-                     onClick={() => { navigate('/') }}
+                    onClick={() => {
+                        navigate('/')
+                    }}
                 >
-                    <ArrowBack sx={{ fontSize: 36 }} />
+                    <ArrowBack sx={{fontSize: 36}}/>
                 </IconButton>
             </Box>
 
@@ -229,7 +232,7 @@ export default function NowPlaying() {
                             component="img"
                             image={currentSong.art}
                             alt="Album Art"
-                            sx={{ width: 260, height: 260, borderRadius: 4 }}
+                            sx={{width: 260, height: 260, borderRadius: 4}}
                         />
                     </Card>
                 </Box>
@@ -255,19 +258,19 @@ export default function NowPlaying() {
                     }}>
                         MEDUZA
                     </Typography>
-                    <Typography variant="h4" sx={{ color: colors.white, fontWeight: 700, mb: 1, mt: -6 }}>
+                    <Typography variant="h4" sx={{color: colors.white, fontWeight: 700, mb: 1, mt: -6}}>
                         {currentSong.title.split(' - ')[0]}
                     </Typography>
-                    <Typography variant="subtitle1" sx={{ color: colors.gray, mb: 1 }}>
+                    <Typography variant="subtitle1" sx={{color: colors.gray, mb: 1}}>
                         {currentSong.artist} &bull; {currentSong.album} &bull; {currentSong.year}
                     </Typography>
                     {/* Rating (static for now) */}
-                    <Typography variant="h5" sx={{ color: colors.pink, fontWeight: 700, mb: 2 }}>
-                        4.5<span style={{ fontSize: 18 }}>/5</span>
+                    <Typography variant="h5" sx={{color: colors.pink, fontWeight: 700, mb: 2}}>
+                        4.5<span style={{fontSize: 18}}>/5</span>
                     </Typography>
 
                     {/* Playlist (Up Next) */}
-                    <Box sx={{ width: '100%', mt: 2, mb: 2 }}>
+                    <Box sx={{width: '100%', mt: 2, mb: 2}}>
                         <Box sx={{
                             background: colors.cardBg,
                             borderRadius: 2,
@@ -287,11 +290,15 @@ export default function NowPlaying() {
                                     mb: 1,
                                     fontWeight: idx === currentSongIndex ? 700 : 400,
                                     cursor: 'pointer',
-                                    transition: 'background 0.2s'}} onClick={()=>{setCurrentSongIndex(idx)}}>
-                                    <Typography variant="body1" sx={{ fontWeight: 'inherit' }}>
+                                    transition: 'background 0.2s'
+                                }} onClick={() => {
+                                    setCurrentSongIndex(idx);
+                                    dispatch(setCurrentTime(0));
+                                }}>
+                                    <Typography variant="body1" sx={{fontWeight: 'inherit'}}>
                                         {idx + 1}. {song.title.split(' - ')[0]}
                                     </Typography>
-                                    <Typography variant="body2" sx={{ fontWeight: 'inherit' }}>
+                                    <Typography variant="body2" sx={{fontWeight: 'inherit'}}>
                                         {durations[idx] ? formatTime(durations[idx]) : "--:--"}
                                     </Typography>
 
@@ -316,18 +323,20 @@ export default function NowPlaying() {
                 mb: 4,
             }}>
                 {/* Time & Progress */}
-                <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
-                    <Typography variant="body2" sx={{ color: colors.gray, fontWeight: 700 }}>
+                <Box
+                    sx={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1}}>
+                    <Typography variant="body2" sx={{color: colors.gray, fontWeight: 700}}>
                         {formatTime(progress)}
                     </Typography>
-                    <Typography variant="body2" sx={{ color: colors.gray, fontWeight: 700 }}>
+                    <Typography variant="body2" sx={{color: colors.gray, fontWeight: 700}}>
                         {formatTime(duration)}
                     </Typography>
                 </Box>
                 <Slider
                     value={progress}
                     onChange={(e, newValue) => {
-                        setProgress(newValue)
+                        dispatch(setCurrentTime(newValue))
+
                         audioRef.current.currentTime = newValue
                     }}
                     max={audioRef.current?.duration || 100}
@@ -349,13 +358,13 @@ export default function NowPlaying() {
                     }}
                 />
                 {/* Controls */}
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2, mt: 1 }}>
-                    <IconButton  onClick={prevSong}  sx={{ color: colors.white }}>
-                        <SkipPrevious />
+                <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2, mt: 1}}>
+                    <IconButton onClick={prevSong} sx={{color: colors.white}}>
+                        <SkipPrevious/>
                     </IconButton>
                     <IconButton
                         color={btnColour}
-                         onClick={practiceClicked}
+                        onClick={practiceClicked}
                         sx={{
                             mx: 1,
                             background: isPlaying ? colors.pink : colors.cardBg,
@@ -371,22 +380,23 @@ export default function NowPlaying() {
                             transition: 'all 0.2s',
                         }}
                     >
-                        {isPlaying ? <Pause sx={{ fontSize: 36 }} /> : <PlayArrow sx={{ fontSize: 36 }} />}
+                        {isPlaying ? <Pause sx={{fontSize: 36}}/> : <PlayArrow sx={{fontSize: 36}}/>}
                     </IconButton>
-                    <IconButton  onClick={nextSong} sx={{ color: colors.white }}>
-                        <SkipNext />
+                    <IconButton onClick={nextSong} sx={{color: colors.white}}>
+                        <SkipNext/>
                     </IconButton>
-                    <IconButton  onClick={() => dispatch(toggleRepeat())}  sx={{ color: isRepeat ? colors.pink : colors.gray }}>
-                        <Repeat />
+                    <IconButton onClick={() => dispatch(toggleRepeat())}
+                                sx={{color: isRepeat ? colors.pink : colors.gray}}>
+                        <Repeat/>
                     </IconButton>
-                    <IconButton onClick={() => dispatch(toggleShuffle()) } sx={{ color: isShuffle ? colors.pink : colors.gray }}>
-                        <Shuffle />
+                    <IconButton onClick={() => dispatch(toggleShuffle())}
+                                sx={{color: isShuffle ? colors.pink : colors.gray}}>
+                        <Shuffle/>
                     </IconButton>
 
                 </Box>
             </Box>
-            {/* Audio element (hidden) */}
-            <audio ref={audioRef} src={url} />
+            <audio ref={audioRef} src={url}/>
         </Box>
     );
 }

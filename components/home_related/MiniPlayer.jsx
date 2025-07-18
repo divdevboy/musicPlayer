@@ -1,7 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Box, IconButton, Typography, Card, CardMedia } from "@mui/material";
-import { PlayArrow, Pause, SkipNext, SkipPrevious } from "@mui/icons-material";
+import React, {useState, useRef, useEffect} from "react";
+import {Box, IconButton, Typography, Card, CardMedia} from "@mui/material";
+import {PlayArrow, Pause, SkipNext, SkipPrevious} from "@mui/icons-material";
 import Slider from "@mui/material/Slider";
+import {useDispatch, useSelector} from "react-redux";
+import {play, setCurrentTime, togglePlay} from "../redux/PlayerSlice.js";
 
 const colors = {
     bg: '#181818',
@@ -34,59 +36,72 @@ const playlist = [
 ];
 
 export default function MiniPlayer({onclick}) {
-    const [currentSongIndex, setCurrentSongIndex] = useState(0);
-    const [isPlaying, setIsPlaying] = useState(false);
+    const [currentSongIndex, setCurrentSongIndex] = useState(1);
+    const dispatch = useDispatch();
+    const isPlaying = useSelector(state => state.player.isPlaying);
     const audioRef = useRef(null);
-    const [progress, setProgress] = useState(0);
+    const progress = useSelector(state => state.player.progress)
+
+    //   const [progress, setProgress] = useState(0);
     const [duration, setDuration] = useState(0);
 
     const currentSong = playlist[currentSongIndex];
 
+    // Restore progress from Redux only on initial mount
     useEffect(() => {
         if (!audioRef.current) return;
+        audioRef.current.currentTime = progress;
+    }, []);
+
+    useEffect(() => {
+        if (!audioRef.current) return;
+        audioRef.current.currentTime = progress;
         audioRef.current.load();
         if (isPlaying) {
             audioRef.current.play();
         }
-        setProgress(0);
+        dispatch(setCurrentTime(0));
     }, [currentSongIndex]);
 
     useEffect(() => {
         const audio = audioRef.current;
         if (!audio) return;
-        const updateProgress = () => setProgress(audio.currentTime);
+        const updateProgress = () => dispatch(setCurrentTime(audio.currentTime));
         const setAudioDuration = () => setDuration(audio.duration);
+        const handleEnded = () => { handleNext(); };
         audio.addEventListener("timeupdate", updateProgress);
         audio.addEventListener("loadedmetadata", setAudioDuration);
+        audio.addEventListener("ended", handleEnded);
+
         return () => {
             audio.removeEventListener("timeupdate", updateProgress);
             audio.removeEventListener("loadedmetadata", setAudioDuration);
+            audio.removeEventListener("ended", handleEnded);
         };
     }, [currentSong.url]);
 
     function handlePlayPause() {
-        setIsPlaying((prev) => {
-            const next = !prev;
-            if (audioRef.current) {
-                if (next) audioRef.current.play();
-                else audioRef.current.pause();
-            }
-            return next;
-        });
+        if (!audioRef.current) return;
+        if (isPlaying) {
+            audioRef.current.pause();
+        } else {
+            audioRef.current.play();
+        }
+        dispatch(togglePlay());
     }
 
     function handleNext() {
         setCurrentSongIndex((prev) => (prev + 1) % playlist.length);
-        setIsPlaying(true);
+        dispatch(setCurrentTime(0));
     }
 
     function handlePrev() {
         setCurrentSongIndex((prev) => (prev - 1 + playlist.length) % playlist.length);
-        setIsPlaying(true);
+        dispatch(setCurrentTime(0));
     }
 
     function handleSliderChange(e, value) {
-        setProgress(value);
+        dispatch(setCurrentTime(value));
         if (audioRef.current) {
             audioRef.current.currentTime = value;
         }
@@ -99,7 +114,7 @@ export default function MiniPlayer({onclick}) {
             right: 32,
             zIndex: 2000,
             boxShadow: '0 4px 32px 0 #181818',
-        }} onClick={onclick}>
+        }}>
             <Card sx={{
                 width: 320,
                 height: 120,
@@ -111,18 +126,31 @@ export default function MiniPlayer({onclick}) {
                 px: 2,
                 py: 1,
             }}>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box sx={{display: 'flex', alignItems: 'center'}}>
                     <CardMedia
                         component="img"
                         image={currentSong.art}
                         alt="Album Art"
-                        sx={{ width: 64, height: 64, borderRadius: 2, mr: 2 }}
+                        sx={{width: 64, height: 64, borderRadius: 2, mr: 2}}
                     />
-                    <Box sx={{ flex: 1, minWidth: 0 }}>
-                        <Typography variant="subtitle1" sx={{ color: colors.white, fontWeight: 700, fontSize: 18, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    <Box sx={{flex: 1, minWidth: 0}} onClick={onclick}>
+                        <Typography variant="subtitle1" sx={{
+                            color: colors.white,
+                            fontWeight: 700,
+                            fontSize: 18,
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
+                        }}>
                             {currentSong.title}
                         </Typography>
-                        <Typography variant="body2" sx={{ color: colors.gray, fontSize: 14, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        <Typography variant="body2" sx={{
+                            color: colors.gray,
+                            fontSize: 14,
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
+                        }}>
                             {currentSong.artist}
                         </Typography>
                     </Box>
@@ -152,19 +180,19 @@ export default function MiniPlayer({onclick}) {
                     }}
                 />
                 {/* Controls */}
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 0 }}>
-                    <IconButton onClick={handlePrev} sx={{ color: colors.white }}>
-                        <SkipPrevious />
+                <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 0}} >
+                    <IconButton onClick={handlePrev} sx={{color: colors.white}}>
+                        <SkipPrevious/>
                     </IconButton>
-                    <IconButton onClick={handlePlayPause} sx={{ color: isPlaying ? colors.pink : colors.white }}>
-                        {isPlaying ? <Pause /> : <PlayArrow />}
+                    <IconButton onClick={handlePlayPause} sx={{color: isPlaying ? colors.pink : colors.white}}>
+                        {isPlaying ? <Pause/> : <PlayArrow/>}
                     </IconButton>
-                    <IconButton onClick={handleNext} sx={{ color: colors.white }}>
-                        <SkipNext />
+                    <IconButton onClick={handleNext} sx={{color: colors.white}}>
+                        <SkipNext/>
                     </IconButton>
                 </Box>
-                <audio ref={audioRef} src={currentSong.url} />
+                <audio ref={audioRef} src={currentSong.url}/>
             </Card>
         </Box>
     );
-} 
+}
